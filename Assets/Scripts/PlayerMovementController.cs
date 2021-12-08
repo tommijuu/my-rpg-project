@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ThirdPersonController : MonoBehaviour
+public class PlayerMovementController : MonoBehaviour
 {
     public float moveSpeed;
     public float rotateSpeed;
