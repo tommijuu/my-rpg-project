@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -20,20 +21,35 @@ public class Player : MonoBehaviour
 
     public Renderer targetRenderer;
 
+    public Text spellCastTimerText;
+
     public bool isAttacking = false;
 
     public bool finishedCasting = false;
 
-    public float castTime = 2f; //just a hardcoded cast time for testing purposes for the first spell
+    public float castTime = 2.0f; //just a hardcoded cast time for testing purposes for the first spell
+    public float currentCastTime = 0.0f;
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            if (currentTarget.tag == "Enemy" && !isAttacking)
+            if (currentTarget.CompareTag("Enemy") && !isAttacking)
             {
                 attackRoutine = StartCoroutine(Attack());
             }
+        }
+
+        if (isAttacking)
+        {
+            currentCastTime += Time.deltaTime;
+            int seconds = (int)(currentCastTime % 60);
+            int milliseconds = (int)(currentCastTime * 100f) % 100;
+
+            if (seconds >= 10)
+                spellCastTimerText.text = seconds.ToString("D2") + "." + milliseconds.ToString("D2") + "/" + castTime.ToString();
+            else
+                spellCastTimerText.text = seconds.ToString("D1") + "." + milliseconds.ToString("D2") + "/" + castTime.ToString();
         }
     }
 
@@ -54,7 +70,8 @@ public class Player : MonoBehaviour
         if (attackRoutine != null)
         {
             isAttacking = false;
-            //finishedCasting = true;
+            currentCastTime = 0;
+            spellCastTimerText.text = "";
 
             StopCoroutine(attackRoutine);
         }
