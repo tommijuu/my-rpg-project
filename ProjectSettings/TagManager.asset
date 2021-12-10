@@ -5,8 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
-  - Enemy
   - Interactable
+  - HostileNPC
   layers:
   - Default
   - TransparentFX

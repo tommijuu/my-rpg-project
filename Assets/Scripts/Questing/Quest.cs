@@ -5,6 +5,8 @@ using System.Linq;
 
 public class Quest : MonoBehaviour
 {
+    //This script is a base class for quests
+
     public List<Goal> Goals { get; set; } = new List<Goal>();
     public string QuestName { get; set; }
     public string Description { get; set; }
@@ -20,6 +22,7 @@ public class Quest : MonoBehaviour
 
     void GiveReward()
     {
-        Debug.Log("GZ, U GOT NOTHING");
+        //Implement rewards here
+        Debug.Log("Congratulations, U GOT NOTHING");
     }
 }

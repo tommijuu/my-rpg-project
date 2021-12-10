@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
 {
+    private Rigidbody _rb;
+
     public float moveSpeed;
     public float rotateSpeed;
     public float jumpForce;
@@ -14,11 +16,9 @@ public class PlayerMovementController : MonoBehaviour
 
     public bool grounded = true;
 
-    Rigidbody rb;
-
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -33,29 +33,27 @@ public class PlayerMovementController : MonoBehaviour
 
     void Update()
     {
-        //Better jumping
-        if (rb.velocity.y < 0)
-        {
-            rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-        }
-        else if (rb.velocity.y > 0)
-        {
-            rb.velocity += Vector3.up * Physics.gravity.y * (jumpMultiplier - 1) * Time.deltaTime;
-        }
-
-        // Moving player wasd
+        //Moving
         float xMovement = Input.GetAxis("Horizontal");
         float zMovement = Input.GetAxis("Vertical");
         transform.Translate(xMovement * moveSpeed * Time.deltaTime, 0, zMovement * moveSpeed * Time.deltaTime);
 
-        // Jumping
-
-        if (rb.velocity.y == 0) { grounded = true; }
-
-        if (Input.GetButtonDown("Jump") && grounded)
+        //Jumping math
+        if (_rb.velocity.y < 0)
         {
-            rb.velocity = Vector3.up * jumpForce;
+            _rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+        }
+        else if (_rb.velocity.y > 0)
+        {
+            _rb.velocity += Vector3.up * Physics.gravity.y * (jumpMultiplier - 1) * Time.deltaTime;
         }
 
+        if (_rb.velocity.y == 0) { grounded = true; }
+
+        //Jumping
+        if (Input.GetButtonDown("Jump") && grounded)
+        {
+            _rb.velocity = Vector3.up * jumpForce;
+        }
     }
 }

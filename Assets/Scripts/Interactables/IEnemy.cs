@@ -6,6 +6,6 @@ public interface IEnemy
     void OnHoverEnter();
     void OnHoverExit();
 
+    //To identify different enemy types
     int ID { get; set; }
-
 }
