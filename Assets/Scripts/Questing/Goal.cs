@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Goal
 {
+    //This script is a base class to keep count of the quests goals, there will be a KillGoal and GatheringGoal for example
+
     public string Description { get; set; }
     public bool Completed { get; set; }
     public int CurrentAmount { get; set; }
@@ -11,7 +13,7 @@ public class Goal
 
     public virtual void Init()
     {
-        //killgoal, gathergoal etc use this in the future
+        //killgoal, gathergoal etc use this in the future to initialize them
     }
 
     public void Evaluate()

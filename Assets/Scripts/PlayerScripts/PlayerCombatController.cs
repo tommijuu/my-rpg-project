@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class PlayerCombatController : MonoBehaviour
 {
-    private FireBall fireBall;
+    //private FireBall _fireBall;
 
-    private Coroutine attackRoutine;
+    private Coroutine _attackRoutine;
 
-    private RaycastHit hit;
+    private RaycastHit _hit;
 
     public Transform currentTarget;
 
@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
 
     public bool finishedCasting = false;
 
-    public float castTime = 2.0f; //just a hardcoded cast time for testing purposes for the first spell
+    public float castTime = 2.0f; //just a hardcoded cast time for testing purposes as I have just one spell at the moment
     public float currentCastTime = 0.0f;
 
     void Update()
@@ -36,24 +36,26 @@ public class Player : MonoBehaviour
         {
             if (currentTarget.CompareTag("Enemy") && !isAttacking)
             {
-                attackRoutine = StartCoroutine(Attack());
+                _attackRoutine = StartCoroutine(Attack());
             }
         }
 
         if (isAttacking)
         {
+            //Showing the current cast time in seconds and milliseconds in relation to the required quest time
+
             currentCastTime += Time.deltaTime;
             int seconds = (int)(currentCastTime % 60);
             int milliseconds = (int)(currentCastTime * 100f) % 100;
 
-            if (seconds >= 10)
+            if (seconds >= 10) //format to show two numbers for seconds
                 spellCastTimerText.text = seconds.ToString("D2") + "." + milliseconds.ToString("D2") + "/" + castTime.ToString();
-            else
+            else //don't show the 0 in front of the one number seconds
                 spellCastTimerText.text = seconds.ToString("D1") + "." + milliseconds.ToString("D2") + "/" + castTime.ToString();
         }
     }
 
-    public IEnumerator Attack()
+    public IEnumerator Attack() //Currently implemented to just cast a fireball
     {
         isAttacking = true;
         //finishedCasting = false;
@@ -67,17 +69,17 @@ public class Player : MonoBehaviour
 
     public void StopAttack()
     {
-        if (attackRoutine != null)
+        if (_attackRoutine != null)
         {
             isAttacking = false;
             currentCastTime = 0;
             spellCastTimerText.text = "";
 
-            StopCoroutine(attackRoutine);
+            StopCoroutine(_attackRoutine);
         }
     }
 
-    public void CastSpell()
+    public void CastSpell() //Instantiates a fireball prefab and FireBall.cs takes over, launching it towards the target
     {
         if (isAttacking)
             Instantiate(spellPrefab[0], castPoint.transform.position, Quaternion.identity);

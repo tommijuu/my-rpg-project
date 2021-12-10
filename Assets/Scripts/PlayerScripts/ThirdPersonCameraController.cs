@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class ThirdPersonCameraController : MonoBehaviour
 {
-    public Transform player, target; //Target to follow
+    //This script is for the camera to be MMO-like, like in World of Warcraft.
+    //Holding right click is free look, so it rotates the camera around the player
+    //Holding left click turns the player and the camera, so player's moving direction can be controlled with mouse
+    //Scroll implemented too
+
+    public Transform player, target; //Player transform is to rotate the player (left click) and target is a point inside the player where the camera focuses (both clicks)
 
     public float targetHeigth = 1.7f; //Vertical offset adjustment
     public float distance = 12f; //Default Distance
@@ -33,31 +38,30 @@ public class ThirdPersonCameraController : MonoBehaviour
     private float _xDeg = 0.0f;
     private float _yDeg = 0.0f;
 
-    private float currentDistance;
-    private float desiredDistance;
-    private float correctedDistance;
+    //For scroll zoom
+    private float _currentDistance;
+    private float _desiredDistance;
+    private float _correctedDistance;
 
-    private bool rotateBehind = false;
+    private bool _rotateBehind = false;
 
-    private bool isCorrected = false;
+    private bool _isCorrected = false;
 
-    private RaycastHit collisionHit;
+    private RaycastHit _collisionHit;
 
-    // Start is called before the first frame update
     void Start()
     {
         Vector3 angles = transform.eulerAngles;
         _xDeg = angles.x;
         _yDeg = angles.y;
-        currentDistance = distance;
-        desiredDistance = distance;
-        correctedDistance = distance;
+        _currentDistance = distance;
+        _desiredDistance = distance;
+        _correctedDistance = distance;
 
         if (lockToRearOfTarget)
-            rotateBehind = true;
+            _rotateBehind = true;
     }
 
-    // Update is called once per frame
     void LateUpdate()
     {
         Vector3 vTargetOffSet;
@@ -94,13 +98,13 @@ public class ThirdPersonCameraController : MonoBehaviour
             player.rotation = Quaternion.Euler(0, _xDeg, 0);
 
 
-        desiredDistance -= Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * zoomRate * Mathf.Abs(desiredDistance);
-        desiredDistance = Mathf.Clamp(desiredDistance, minDistance, maxDistance);
-        correctedDistance = desiredDistance;
+        _desiredDistance -= Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * zoomRate * Mathf.Abs(_desiredDistance);
+        _desiredDistance = Mathf.Clamp(_desiredDistance, minDistance, maxDistance);
+        _correctedDistance = _desiredDistance;
 
         //Desired camera position calculation
         vTargetOffSet = new Vector3(0, -targetHeigth, 0);
-        Vector3 position = target.position - (rotation * Vector3.forward * desiredDistance + vTargetOffSet);
+        Vector3 position = target.position - (rotation * Vector3.forward * _desiredDistance + vTargetOffSet);
 
 
         Vector3 trueTargetPosition = new Vector3(target.position.x, target.position.y + targetHeigth, target.position.z);
@@ -109,19 +113,19 @@ public class ThirdPersonCameraController : MonoBehaviour
         // If there was a collision, correct the camera position and calculate the corrected distance 
         if (Physics.Linecast(trueTargetPosition, position, collisionLayers, QueryTriggerInteraction.Ignore)) //collisionHit missing here atm!!!!
         {
-            correctedDistance = Vector3.Distance(trueTargetPosition, collisionHit.point) - offsetFromWall;
-            isCorrected = true;
+            _correctedDistance = Vector3.Distance(trueTargetPosition, _collisionHit.point) - offsetFromWall;
+            _isCorrected = true;
         }
 
         //For smoothing, lerp distance only if either distance wasn't corrected, or correctedDistance is more than currentDistance 
-        currentDistance = !isCorrected || correctedDistance > currentDistance ? Mathf.Lerp(currentDistance, correctedDistance,
-            Time.deltaTime * zoomDampening) : correctedDistance;
+        _currentDistance = !_isCorrected || _correctedDistance > _currentDistance ? Mathf.Lerp(_currentDistance, _correctedDistance,
+            Time.deltaTime * zoomDampening) : _correctedDistance;
 
         //Keep within limits
-        currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
+        _currentDistance = Mathf.Clamp(_currentDistance, minDistance, maxDistance);
 
         //Recalculate position based on the new currentDistance
-        position = target.position - (rotation * Vector3.forward * currentDistance + vTargetOffSet);
+        position = target.position - (rotation * Vector3.forward * _currentDistance + vTargetOffSet);
 
         //Set Camera rotation and position
         transform.rotation = rotation;
@@ -138,11 +142,11 @@ public class ThirdPersonCameraController : MonoBehaviour
         if (targetRotationAngle == currentRotationAngle)
         {
             if (!lockToRearOfTarget)
-                rotateBehind = false;
+                _rotateBehind = false;
         }
         else
         {
-            rotateBehind = true;
+            _rotateBehind = true;
         }
     }
 

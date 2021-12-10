@@ -987,7 +987,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1209455328}
-  - component: {fileID: 1209455327}
   - component: {fileID: 1209455329}
   - component: {fileID: 1209455330}
   m_Layer: 0
@@ -997,19 +996,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1209455327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1209455326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04cc983ce89e7b645a90f120874b9333, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1898018613}
 --- !u!4 &1209455328
 Transform:
   m_ObjectHideFlags: 0
@@ -1038,6 +1024,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
   untargeted: 0
+  isHoveringNPC: 0
 --- !u!114 &1209455330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1236,7 +1223,7 @@ GameObject:
   - component: {fileID: 1322197157}
   m_Layer: 8
   m_Name: Enemy
-  m_TagString: Enemy
+  m_TagString: HostileNPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1348,8 +1335,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   interactionDistance: 5
-  timer: 4
-  cameraControl: {fileID: 963194226}
+  targetingSystem: {fileID: 0}
+  moveTimer: 0
+  minMoveRange: -2
+  maxMoveRange: 2
 --- !u!65 &1322197156
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class KillGoal : Goal
 {
-
+    //This script keeps track of kill quest's progress
     public int EnemyID { get; set; }
 
     public KillGoal(int enemyID, string description, bool completed, int currentAmount, int requiredAmount)
@@ -24,10 +24,10 @@ public class KillGoal : Goal
 
     void EnemyDied(IEnemy enemy)
     {
-        if (enemy.ID == this.EnemyID) //if enemy ID is current kill goal's enemy ID
+        if (enemy.ID == this.EnemyID) //if the killed enemy's ID is current kill goal's enemy ID
         {
             this.CurrentAmount++;
-            Evaluate();
+            Evaluate(); //Goal scripts function
         }
     }
 }
