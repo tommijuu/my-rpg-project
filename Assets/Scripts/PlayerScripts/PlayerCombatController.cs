@@ -34,7 +34,7 @@ public class PlayerCombatController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            if (currentTarget.CompareTag("Enemy") && !isAttacking)
+            if (currentTarget.CompareTag("HostileNPC") && !isAttacking)
             {
                 _attackRoutine = StartCoroutine(Attack());
             }

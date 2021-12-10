@@ -14,8 +14,7 @@ public class FireBall : MonoBehaviour
 
     //public float animationSpeed = 2f;
 
-    [SerializeField]
-    private float _speed;
+    public float speed = 18f;
 
     private void Awake()
     {
@@ -34,7 +33,7 @@ public class FireBall : MonoBehaviour
         {
             Vector3 dir = _playerCombatController.currentTarget.position - transform.position; //set ball's the direction
 
-            _rb.velocity = dir.normalized * _speed; //set ball's velocity
+            _rb.velocity = dir.normalized * speed; //set ball's velocity
 
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg; //set ball's the angle
 
@@ -45,7 +44,7 @@ public class FireBall : MonoBehaviour
     //Destroy the ball on impact
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag("Enemy"))
+        if (collision.collider.CompareTag("HostileNPC"))
         {
             Destroy(gameObject);
         }
