@@ -250,7 +250,7 @@ GameObject:
   - component: {fileID: 745540904}
   - component: {fileID: 745540911}
   m_Layer: 8
-  m_Name: NPC
+  m_Name: NPCFriendly
   m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1022,7 +1022,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e1d1d718ea304141ba64b6427da8ccf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 0}
+  _playerCombatController: {fileID: 0}
   untargeted: 0
   isHoveringNPC: 0
 --- !u!114 &1209455330
@@ -1057,7 +1057,7 @@ GameObject:
   - component: {fileID: 1303342860}
   - component: {fileID: 1303342867}
   m_Layer: 8
-  m_Name: Item
+  m_Name: PickableItem
   m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1222,7 +1222,7 @@ GameObject:
   - component: {fileID: 1322197156}
   - component: {fileID: 1322197157}
   m_Layer: 8
-  m_Name: Enemy
+  m_Name: NPCHostileHuman
   m_TagString: HostileNPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
