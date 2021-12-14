@@ -8,6 +8,7 @@ public class UserStats : MonoBehaviour
 
     public string userName;
     public int level;
+    public string userClass;
 
     public float currentHp, maxHp, currentMana, maxMana;
 
