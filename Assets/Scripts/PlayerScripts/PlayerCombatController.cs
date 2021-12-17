@@ -22,6 +22,7 @@ public class PlayerCombatController : MonoBehaviour
     public Renderer targetRenderer;
 
     public Text spellCastTimerText;
+    public TargetingSystem targetingSystem;
 
     public bool isAttacking = false;
 
@@ -30,15 +31,31 @@ public class PlayerCombatController : MonoBehaviour
     public float castTime = 2.0f; //just a hardcoded cast time for testing purposes as I have just one spell at the moment
     public float currentCastTime = 0.0f;
 
+    private void Start()
+    {
+        targetingSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<TargetingSystem>();
+        targetingSystem.playerCombatController = this;
+        spellCastTimerText = GameObject.Find("CastTimerText").GetComponent<Text>();
+        currentTarget = null;
+        lastTarget = null;
+        targetRenderer = null;
+        isAttacking = false;
+        finishedCasting = false;
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (currentTarget != null)
         {
-            if (currentTarget.CompareTag("HostileNPC") && !isAttacking)
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                _attackRoutine = StartCoroutine(Attack());
+                if (currentTarget.CompareTag("HostileNPC") && !isAttacking)
+                {
+                    _attackRoutine = StartCoroutine(Attack());
+                }
             }
         }
+
 
         if (isAttacking)
         {
