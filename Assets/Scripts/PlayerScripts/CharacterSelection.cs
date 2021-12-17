@@ -4,31 +4,42 @@ using UnityEngine;
 
 public class CharacterSelection : MonoBehaviour
 {
+    //private TargetingSystem targetingSystem;
     public BaseStats[] AllClassStats;
+    public UserStats userStats;
     public bool classSelectionWindow;
-    public GameObject user;
+    public GameObject userWarrior, userMage;
+
+    //private void Start()
+    //{
+    //    targetingSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<TargetingSystem>();
+    //}
 
     private void OnGUI()
     {
-        if (classSelectionWindow) //Creating just temporary UI for now
+        if (classSelectionWindow) //Simple character selection buttons for now
         {
             if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 150, 200, 40), "Warrior"))
             {
+                userStats = userWarrior.GetComponent<UserStats>();
                 AssignBaseStats(0);
                 classSelectionWindow = false;
+                Instantiate(userWarrior);
+                //targetingSystem.playerCombatController = userWarrior.GetComponent<PlayerCombatController>();
             }
             if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 100, 200, 40), "Mage"))
             {
+                userStats = userMage.GetComponent<UserStats>();
                 AssignBaseStats(1);
                 classSelectionWindow = false;
+                Instantiate(userMage);
+                //targetingSystem.playerCombatController = userMage.GetComponent<PlayerCombatController>();
             }
         }
     }
 
     void AssignBaseStats(int chosenClass) //apply base stats to user stats
     {
-        UserStats userStats = user.GetComponent<UserStats>();
-
         //Class
         userStats.userClass = AllClassStats[chosenClass].userClass;
 

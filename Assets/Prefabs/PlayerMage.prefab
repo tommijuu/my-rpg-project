@@ -368,23 +368,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   userName: 
   level: 0
-  userClass: 
-  currentHp: 0
-  maxHp: 0
-  currentMana: 0
-  maxMana: 0
-  baseAttackPower: 0
-  currentAttackPower: 0
-  baseAttackSpeed: 0
-  currentAttackSpeed: 0
-  baseDodge: 0
-  currentDodge: 0
-  baseHitPercent: 0
-  currentHitPercent: 0
-  hpRegenTimer: 0
-  hpRegenAmount: 0
-  manaRegenTimer: 0
-  manaRegenAmount: 0
+  userClass: Mage
+  currentHp: 100
+  maxHp: 100
+  currentMana: 100
+  maxMana: 100
+  baseAttackPower: 15
+  currentAttackPower: 15
+  baseAttackSpeed: 8
+  currentAttackSpeed: 8
+  baseDodge: 6
+  currentDodge: 6
+  baseHitPercent: 25
+  currentHitPercent: 25
+  hpRegenTimer: 3
+  hpRegenAmount: 5
+  manaRegenTimer: 3
+  manaRegenAmount: 3
   currentXp: 0
   maxXp: 0
   isDead: 0
