@@ -22,7 +22,8 @@ public class UserStats : MonoBehaviour
 
     public float manaRegenTimer, manaRegenAmount;
 
-    public float currentXp, maxXp;
+    public float currentXp = 0;
+    public float maxXp;
 
-    public bool isDead;
+    public bool isDead = false;
 }
