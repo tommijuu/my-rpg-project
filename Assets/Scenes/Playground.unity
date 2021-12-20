@@ -1092,7 +1092,7 @@ MonoBehaviour:
   player: {fileID: 0}
   interactionDistance: 5
   targetingSystem: {fileID: 0}
-  moveTimer: 0
+  moveTimer: 4
   minMoveRange: -2
   maxMoveRange: 2
 --- !u!65 &1322197156

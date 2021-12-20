@@ -22,7 +22,7 @@ public class NPCHostileHuman : Interactable, IEnemy
 
     public int ID { get; set; }
 
-    public float moveTimer;
+    public float moveTimer = 4f;
 
     public int minMoveRange = -2;
     public int maxMoveRange = 2;
@@ -52,6 +52,7 @@ public class NPCHostileHuman : Interactable, IEnemy
 
         while (!_validPath) //if not, get a new one
         {
+            Debug.Log("Not a valid path. Getting a new path.");
             yield return new WaitForSeconds(0.01f);
             GetNewPath();
             _validPath = _navMeshAgent.CalculatePath(_movePoint, _navPath);
