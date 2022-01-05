@@ -40,7 +40,7 @@ public class TargetingSystem : MonoBehaviour
                 Debug.Log("Hovering UI");
             }
 
-            //Targeting enemy when clicked
+            //Targeting an NPC when clicked
             if (Input.GetMouseButtonDown(0))
             {
                 if (Physics.Raycast(ray, out hit) && hit.collider != null)
@@ -49,6 +49,7 @@ public class TargetingSystem : MonoBehaviour
                     {
                         Debug.Log(hit.transform);
                         playerCombatController.currentTarget = hit.transform;
+                        playerCombatController.enemyStats = playerCombatController.currentTarget.GetComponent<EnemyStats>(); //Search EnemyStats script for PlayerCombatController
                         playerCombatController.targetRenderer = playerCombatController.currentTarget.GetComponent<Renderer>();
                         untargeted = false;
                         playerCombatController.targetRenderer.material.color = Color.red;
@@ -67,6 +68,7 @@ public class TargetingSystem : MonoBehaviour
                     playerCombatController.StopAttack();
 
                 untargeted = true;
+                playerCombatController.lastTarget = playerCombatController.currentTarget;
                 playerCombatController.currentTarget = null;
                 playerCombatController.targetRenderer.material.color = Color.yellow;
             }

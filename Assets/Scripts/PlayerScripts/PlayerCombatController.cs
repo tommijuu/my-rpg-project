@@ -24,12 +24,18 @@ public class PlayerCombatController : MonoBehaviour
     public Text spellCastTimerText;
     public TargetingSystem targetingSystem;
 
+    public EnemyStats enemyStats;
+
     public bool isAttacking = false;
 
     public bool finishedCasting = false;
 
+    public bool spellReachedEnemy = false;
+
     public float castTime = 2.0f; //just a hardcoded cast time for testing purposes as I have just one spell at the moment
     public float currentCastTime = 0.0f;
+
+    public float fireBallDmg = 20f; //set to 20 just to test things out currently
 
     private void Start()
     {
@@ -69,6 +75,15 @@ public class PlayerCombatController : MonoBehaviour
                 spellCastTimerText.text = seconds.ToString("D2") + "." + milliseconds.ToString("D2") + "/" + castTime.ToString();
             else //don't show the 0 in front of the one number seconds
                 spellCastTimerText.text = seconds.ToString("D1") + "." + milliseconds.ToString("D2") + "/" + castTime.ToString();
+        }
+
+        if (spellReachedEnemy)
+        {
+            spellReachedEnemy = false;
+            if (currentTarget != null || lastTarget != null)
+            {
+                enemyStats.ReceiveDamage(fireBallDmg);
+            }
         }
     }
 

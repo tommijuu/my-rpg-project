@@ -29,15 +29,28 @@ public class FireBall : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!_targetingSystem.untargeted && _playerCombatController.currentTarget != null)
+        if (!_targetingSystem.untargeted && (_playerCombatController.currentTarget != null || _playerCombatController.lastTarget != null))
         {
-            Vector3 dir = _playerCombatController.currentTarget.position - transform.position; //set ball's the direction
+            if (_playerCombatController.currentTarget != null)
+            {
+                Vector3 dir = _playerCombatController.currentTarget.position - transform.position; //set ball's the direction
 
-            _rb.velocity = dir.normalized * speed; //set ball's velocity
+                _rb.velocity = dir.normalized * speed; //set ball's velocity
 
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg; //set ball's the angle
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg; //set ball's the angle
 
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            }
+            else
+            {
+                Vector3 dir = _playerCombatController.lastTarget.position - transform.position; //set ball's the direction
+
+                _rb.velocity = dir.normalized * speed; //set ball's velocity
+
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg; //set ball's the angle
+
+                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            }
         }
     }
 
@@ -46,6 +59,7 @@ public class FireBall : MonoBehaviour
     {
         if (collision.collider.CompareTag("HostileNPC"))
         {
+            _playerCombatController.spellReachedEnemy = true;
             Destroy(gameObject);
         }
     }
