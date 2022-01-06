@@ -90,7 +90,7 @@ public class PlayerCombatController : MonoBehaviour
     public IEnumerator Attack() //Currently implemented to just cast a fireball
     {
         isAttacking = true;
-        //finishedCasting = false;
+        finishedCasting = false;
 
         yield return new WaitForSeconds(castTime); // Hardcoded cast time for testing purposes
 
@@ -116,7 +116,7 @@ public class PlayerCombatController : MonoBehaviour
         if (isAttacking)
             Instantiate(spellPrefab[0], castPoint.transform.position, Quaternion.identity);
 
-        //finishedCasting = true;
+        finishedCasting = true;
     }
 
     private bool InLineOfSight() //not in action yet

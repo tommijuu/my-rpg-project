@@ -29,27 +29,33 @@ public class FireBall : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!_targetingSystem.untargeted && (_playerCombatController.currentTarget != null || _playerCombatController.lastTarget != null))
+        if ((_playerCombatController.currentTarget != null || _playerCombatController.lastTarget != null))
         {
-            if (_playerCombatController.currentTarget != null)
+            if (!_targetingSystem.untargeted)
             {
-                Vector3 dir = _playerCombatController.currentTarget.position - transform.position; //set ball's the direction
+                if (_playerCombatController.currentTarget != null) //goes to current target's location
+                {
+                    Vector3 dir = _playerCombatController.currentTarget.position - transform.position; //set ball's the direction
 
-                _rb.velocity = dir.normalized * speed; //set ball's velocity
+                    _rb.velocity = dir.normalized * speed; //set ball's velocity
 
-                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg; //set ball's the angle
+                    float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg; //set ball's the angle
 
-                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                    transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                }
             }
             else
             {
-                Vector3 dir = _playerCombatController.lastTarget.position - transform.position; //set ball's the direction
+                if (_playerCombatController.finishedCasting) //current target untargeted but cast finished so goes to last target
+                {
+                    Vector3 dir = _playerCombatController.lastTarget.position - transform.position; //set ball's the direction
 
-                _rb.velocity = dir.normalized * speed; //set ball's velocity
+                    _rb.velocity = dir.normalized * speed; //set ball's velocity
 
-                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg; //set ball's the angle
+                    float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg; //set ball's the angle
 
-                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                    transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                }
             }
         }
     }

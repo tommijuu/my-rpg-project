@@ -67,8 +67,9 @@ public class TargetingSystem : MonoBehaviour
                 if (playerCombatController.isAttacking)
                     playerCombatController.StopAttack();
 
-                untargeted = true;
                 playerCombatController.lastTarget = playerCombatController.currentTarget;
+                untargeted = true;
+
                 playerCombatController.currentTarget = null;
                 playerCombatController.targetRenderer.material.color = Color.yellow;
             }
