@@ -37,6 +37,20 @@ public class PlayerCombatController : MonoBehaviour
 
     public float fireBallDmg = 20f; //set to 20 just to test things out currently
 
+    public bool behindEnemy;
+    public bool canSpellAttack;
+
+    public float spellCastDistance = 40f;
+    public float attackingAngle = 60f;
+
+    public bool canAutoAttack;
+
+    public float autoAttackDistance = 5f;
+    public float autoAttackCooldown = 3f;
+    public float autoAttackCurTime;
+
+    public float autoAttackDmg = 10f;
+
     private void Start()
     {
         targetingSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<TargetingSystem>();
@@ -53,11 +67,70 @@ public class PlayerCombatController : MonoBehaviour
     {
         if (currentTarget != null)
         {
+            //Attacking angle and distance stuff
+            Vector3 toTarget = (currentTarget.transform.position - transform.position).normalized;
+            if (Vector3.Dot(toTarget, currentTarget.transform.forward) < 0)
+            {
+                behindEnemy = false;
+            }
+            else
+            {
+                behindEnemy = true;
+                //Some crit logic here if rogue for example
+            }
+
+            float distance = Vector3.Distance(this.transform.position, currentTarget.transform.position);
+            Vector3 targetDir = currentTarget.transform.position - transform.position;
+            Vector3 forward = transform.forward;
+            float angle = Vector3.Angle(targetDir, forward);
+
+            if (angle > attackingAngle)
+            {
+                canSpellAttack = false;
+            }
+            else
+            {
+
+                if (distance <= autoAttackDistance)
+                {
+                    canAutoAttack = true;
+                }
+                else
+                {
+                    canAutoAttack = false;
+                }
+
+                if (distance <= spellCastDistance)
+                {
+                    canSpellAttack = true;
+                }
+                else
+                {
+                    canSpellAttack = false;
+                }
+
+            }
+
+            //Auto attack
+            if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canAutoAttack)
+            {
+                if (autoAttackCurTime < autoAttackCooldown)
+                {
+                    autoAttackCurTime += Time.deltaTime;
+                }
+                else
+                {
+                    AutoAttack();
+                    autoAttackCurTime = 0;
+                }
+            }
+
+            //When button 1 pressed and able to attack, attack
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                if (currentTarget.CompareTag("HostileNPC") && !isAttacking)
+                if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canSpellAttack)
                 {
-                    _attackRoutine = StartCoroutine(Attack());
+                    _attackRoutine = StartCoroutine(SpellAttack());
                 }
             }
         }
@@ -87,7 +160,12 @@ public class PlayerCombatController : MonoBehaviour
         }
     }
 
-    public IEnumerator Attack() //Currently implemented to just cast a fireball
+    public void AutoAttack()
+    {
+        enemyStats.ReceiveDamage(autoAttackDmg);
+    }
+
+    public IEnumerator SpellAttack() //Currently implemented to just cast a fireball
     {
         isAttacking = true;
         finishedCasting = false;

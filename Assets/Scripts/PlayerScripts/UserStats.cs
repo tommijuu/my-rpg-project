@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UserStats : MonoBehaviour
 {
-    //Base class for player's stats, yet to be implemented
+    //Base class for player's stats
 
     public string userName;
     public int level;

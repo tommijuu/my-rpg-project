@@ -25,8 +25,12 @@ public class EnemyStats : MonoBehaviour
 
     public void ReceiveDamage(float dmg)
     {
-        curHp -= dmg;
-        Debug.Log("Enemy received " + dmg + " damage.");
-        Debug.Log("Enemy HP after receiving dmg: " + curHp);
+        if (curHp > 0)
+        {
+            curHp -= dmg;
+            Debug.Log("Enemy received " + dmg + " damage.");
+            Debug.Log("Enemy HP after receiving dmg: " + curHp);
+
+        }
     }
 }
