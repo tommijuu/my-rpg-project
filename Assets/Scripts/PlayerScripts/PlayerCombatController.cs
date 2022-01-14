@@ -22,6 +22,7 @@ public class PlayerCombatController : MonoBehaviour
     public Renderer targetRenderer;
 
     public Text spellCastTimerText;
+    public Animator outOfRangeAnimator, noTargetAnimator;
     public TargetingSystem targetingSystem;
 
     public EnemyStats enemyStats;
@@ -56,6 +57,8 @@ public class PlayerCombatController : MonoBehaviour
         targetingSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<TargetingSystem>();
         targetingSystem.playerCombatController = this;
         spellCastTimerText = GameObject.Find("CastTimerText").GetComponent<Text>();
+        outOfRangeAnimator = GameObject.Find("OutOfRangeText").GetComponent<Animator>();
+        noTargetAnimator = GameObject.Find("NoTargetText").GetComponent<Animator>();
         currentTarget = null;
         lastTarget = null;
         targetRenderer = null;
@@ -120,18 +123,36 @@ public class PlayerCombatController : MonoBehaviour
                 }
                 else
                 {
-                    AutoAttack();
-                    autoAttackCurTime = 0;
+                    if (targetingSystem.rightClickedOrAttacking)
+                    {
+                        AutoAttack();
+                        autoAttackCurTime = 0;
+                    }
                 }
             }
 
-            //When button 1 pressed and able to attack, attack
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+
+        }
+
+        //When button 1 pressed and able to attack, attack
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            targetingSystem.rightClickedOrAttacking = true;
+            if (currentTarget != null)
             {
                 if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canSpellAttack)
                 {
                     _attackRoutine = StartCoroutine(SpellAttack());
                 }
+
+                if (!canSpellAttack)
+                {
+                    outOfRangeAnimator.SetTrigger("ShowErrorText");
+                }
+            }
+            else
+            {
+                noTargetAnimator.SetTrigger("ShowErrorText");
             }
         }
 

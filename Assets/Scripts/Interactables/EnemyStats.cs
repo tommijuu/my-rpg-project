@@ -20,6 +20,7 @@ public class EnemyStats : MonoBehaviour
             Debug.Log("Enemy destroyed!");
             curHp = 0;
             Destroy(gameObject);
+            GameObject.FindGameObjectWithTag("GameController").GetComponent<CombatEvents>().audioSource.Play();
         }
     }
 

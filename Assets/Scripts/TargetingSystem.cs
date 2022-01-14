@@ -15,6 +15,8 @@ public class TargetingSystem : MonoBehaviour
 
     public bool isHoveringNPC;
 
+    public bool rightClickedOrAttacking;
+
     //void Start()
     //{
     //    playerCombatController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCombatController>();
@@ -23,6 +25,7 @@ public class TargetingSystem : MonoBehaviour
     {
         untargeted = false;
         isHoveringNPC = false;
+        rightClickedOrAttacking = false;
     }
 
     void Update()
@@ -41,12 +44,18 @@ public class TargetingSystem : MonoBehaviour
             }
 
             //Targeting an NPC when clicked
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
             {
                 if (Physics.Raycast(ray, out hit) && hit.collider != null)
                 {
                     if (hit.transform.CompareTag("HostileNPC"))
                     {
+                        if (Input.GetMouseButtonDown(1))
+                        {
+                            Debug.Log("Target right clicked");
+                            rightClickedOrAttacking = true;
+                        }
+
                         Debug.Log(hit.transform);
                         playerCombatController.currentTarget = hit.transform;
                         playerCombatController.enemyStats = playerCombatController.currentTarget.GetComponent<EnemyStats>(); //Search EnemyStats script for PlayerCombatController
@@ -64,6 +73,8 @@ public class TargetingSystem : MonoBehaviour
             //Untarget using Escape
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+                rightClickedOrAttacking = false;
+
                 if (playerCombatController.isAttacking)
                     playerCombatController.StopAttack();
 

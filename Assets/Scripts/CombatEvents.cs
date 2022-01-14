@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CombatEvents : MonoBehaviour
 {
+    public AudioSource audioSource;
+
     public delegate void EnemyEventHandler(IEnemy enemy);
     public static event EnemyEventHandler OnEnemyDeath;
 
@@ -11,6 +13,11 @@ public class CombatEvents : MonoBehaviour
     {
         if (OnEnemyDeath != null)
             OnEnemyDeath(enemy);
+    }
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
     }
 
 }
