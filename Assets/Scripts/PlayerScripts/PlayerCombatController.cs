@@ -22,20 +22,43 @@ public class PlayerCombatController : MonoBehaviour
     public Renderer targetRenderer;
 
     public Text spellCastTimerText;
+    public Animator outOfRangeAnimator, noTargetAnimator;
     public TargetingSystem targetingSystem;
+
+    public EnemyStats enemyStats;
 
     public bool isAttacking = false;
 
     public bool finishedCasting = false;
 
+    public bool spellReachedEnemy = false;
+
     public float castTime = 2.0f; //just a hardcoded cast time for testing purposes as I have just one spell at the moment
     public float currentCastTime = 0.0f;
+
+    public float fireBallDmg = 20f; //set to 20 just to test things out currently
+
+    public bool behindEnemy;
+    public bool canSpellAttack;
+
+    public float spellCastDistance = 40f;
+    public float attackingAngle = 60f;
+
+    public bool canAutoAttack;
+
+    public float autoAttackDistance = 5f;
+    public float autoAttackCooldown = 3f;
+    public float autoAttackCurTime;
+
+    public float autoAttackDmg = 10f;
 
     private void Start()
     {
         targetingSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<TargetingSystem>();
         targetingSystem.playerCombatController = this;
         spellCastTimerText = GameObject.Find("CastTimerText").GetComponent<Text>();
+        outOfRangeAnimator = GameObject.Find("OutOfRangeText").GetComponent<Animator>();
+        noTargetAnimator = GameObject.Find("NoTargetText").GetComponent<Animator>();
         currentTarget = null;
         lastTarget = null;
         targetRenderer = null;
@@ -47,12 +70,89 @@ public class PlayerCombatController : MonoBehaviour
     {
         if (currentTarget != null)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            //Attacking angle and distance stuff
+            Vector3 toTarget = (currentTarget.transform.position - transform.position).normalized;
+            if (Vector3.Dot(toTarget, currentTarget.transform.forward) < 0)
             {
-                if (currentTarget.CompareTag("HostileNPC") && !isAttacking)
+                behindEnemy = false;
+            }
+            else
+            {
+                behindEnemy = true;
+                //Some crit logic here if rogue for example
+            }
+
+            float distance = Vector3.Distance(this.transform.position, currentTarget.transform.position);
+            Vector3 targetDir = currentTarget.transform.position - transform.position;
+            Vector3 forward = transform.forward;
+            float angle = Vector3.Angle(targetDir, forward);
+
+            if (angle > attackingAngle)
+            {
+                canSpellAttack = false;
+            }
+            else
+            {
+
+                if (distance <= autoAttackDistance)
                 {
-                    _attackRoutine = StartCoroutine(Attack());
+                    canAutoAttack = true;
                 }
+                else
+                {
+                    canAutoAttack = false;
+                }
+
+                if (distance <= spellCastDistance)
+                {
+                    canSpellAttack = true;
+                }
+                else
+                {
+                    canSpellAttack = false;
+                }
+
+            }
+
+            //Auto attack
+            if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canAutoAttack)
+            {
+                if (autoAttackCurTime < autoAttackCooldown)
+                {
+                    autoAttackCurTime += Time.deltaTime;
+                }
+                else
+                {
+                    if (targetingSystem.rightClickedOrAttacking)
+                    {
+                        AutoAttack();
+                        autoAttackCurTime = 0;
+                    }
+                }
+            }
+
+
+        }
+
+        //When button 1 pressed and able to attack, attack
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            targetingSystem.rightClickedOrAttacking = true;
+            if (currentTarget != null)
+            {
+                if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canSpellAttack)
+                {
+                    _attackRoutine = StartCoroutine(SpellAttack());
+                }
+
+                if (!canSpellAttack)
+                {
+                    outOfRangeAnimator.SetTrigger("ShowErrorText");
+                }
+            }
+            else
+            {
+                noTargetAnimator.SetTrigger("ShowErrorText");
             }
         }
 
@@ -70,12 +170,26 @@ public class PlayerCombatController : MonoBehaviour
             else //don't show the 0 in front of the one number seconds
                 spellCastTimerText.text = seconds.ToString("D1") + "." + milliseconds.ToString("D2") + "/" + castTime.ToString();
         }
+
+        if (spellReachedEnemy)
+        {
+            spellReachedEnemy = false;
+            if (currentTarget != null || lastTarget != null)
+            {
+                enemyStats.ReceiveDamage(fireBallDmg);
+            }
+        }
     }
 
-    public IEnumerator Attack() //Currently implemented to just cast a fireball
+    public void AutoAttack()
+    {
+        enemyStats.ReceiveDamage(autoAttackDmg);
+    }
+
+    public IEnumerator SpellAttack() //Currently implemented to just cast a fireball
     {
         isAttacking = true;
-        //finishedCasting = false;
+        finishedCasting = false;
 
         yield return new WaitForSeconds(castTime); // Hardcoded cast time for testing purposes
 
@@ -101,7 +215,7 @@ public class PlayerCombatController : MonoBehaviour
         if (isAttacking)
             Instantiate(spellPrefab[0], castPoint.transform.position, Quaternion.identity);
 
-        //finishedCasting = true;
+        finishedCasting = true;
     }
 
     private bool InLineOfSight() //not in action yet
