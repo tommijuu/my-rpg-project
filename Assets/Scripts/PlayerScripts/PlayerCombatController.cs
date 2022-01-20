@@ -52,6 +52,9 @@ public class PlayerCombatController : MonoBehaviour
 
     public float autoAttackDmg = 10f;
 
+    public LayerMask raycastLayers;
+    public bool inLineOfSight;
+
     private void Start()
     {
         targetingSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<TargetingSystem>();
@@ -114,8 +117,20 @@ public class PlayerCombatController : MonoBehaviour
 
             }
 
+            //Line of sight
+            RaycastHit hit;
+            if (Physics.Linecast(currentTarget.transform.position, transform.position, out hit, raycastLayers))
+            {
+                Debug.Log("LOS");
+                inLineOfSight = false;
+            }
+            else
+            {
+                inLineOfSight = true;
+            }
+
             //Auto attack
-            if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canAutoAttack)
+            if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canAutoAttack && inLineOfSight)
             {
                 if (autoAttackCurTime < autoAttackCooldown)
                 {
@@ -140,7 +155,7 @@ public class PlayerCombatController : MonoBehaviour
             targetingSystem.rightClickedOrAttacking = true;
             if (currentTarget != null)
             {
-                if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canSpellAttack)
+                if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canSpellAttack && inLineOfSight)
                 {
                     _attackRoutine = StartCoroutine(SpellAttack());
                 }
@@ -212,8 +227,14 @@ public class PlayerCombatController : MonoBehaviour
 
     public void CastSpell() //Instantiates a fireball prefab and FireBall.cs takes over, launching it towards the target
     {
-        if (isAttacking)
+        if (isAttacking && inLineOfSight)
+        {
             Instantiate(spellPrefab[0], castPoint.transform.position, Quaternion.identity);
+        }
+        else
+        {
+            Debug.Log("Target not in line of sight.");
+        }
 
         finishedCasting = true;
     }
