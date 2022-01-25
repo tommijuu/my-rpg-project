@@ -350,10 +350,29 @@ MonoBehaviour:
   castPoint: {fileID: 6620989082706248290}
   targetRenderer: {fileID: 0}
   spellCastTimerText: {fileID: 0}
+  outOfRangeAnimator: {fileID: 0}
+  noTargetAnimator: {fileID: 0}
+  targetingSystem: {fileID: 0}
+  enemyStats: {fileID: 0}
   isAttacking: 0
   finishedCasting: 0
+  spellReachedEnemy: 0
   castTime: 2
   currentCastTime: 0
+  fireBallDmg: 20
+  behindEnemy: 0
+  canSpellAttack: 0
+  spellCastDistance: 40
+  attackingAngle: 60
+  canAutoAttack: 0
+  autoAttackDistance: 5
+  autoAttackCooldown: 3
+  autoAttackCurTime: 0
+  autoAttackDmg: 10
+  raycastLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  inLineOfSight: 0
 --- !u!114 &6620989081731426979
 MonoBehaviour:
   m_ObjectHideFlags: 0

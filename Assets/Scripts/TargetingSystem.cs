@@ -17,6 +17,9 @@ public class TargetingSystem : MonoBehaviour
 
     public bool rightClickedOrAttacking;
 
+    public bool toolTipActive;
+    public string hoverName;
+
     //void Start()
     //{
     //    playerCombatController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCombatController>();
@@ -26,6 +29,13 @@ public class TargetingSystem : MonoBehaviour
         untargeted = false;
         isHoveringNPC = false;
         rightClickedOrAttacking = false;
+    }
+
+    private void OnGUI()
+    {
+        //Making an initial tooltip appear when toolTipActive is true
+        if (toolTipActive)
+            GUI.Label(new Rect(Input.mousePosition.x - 100, Screen.height - Input.mousePosition.y, 100, 50), "" + hoverName);
     }
 
     void Update()
@@ -85,6 +95,25 @@ public class TargetingSystem : MonoBehaviour
                 playerCombatController.targetRenderer.material.color = Color.yellow;
             }
 
+
+            //Tooltip logic
+            Ray rayHover = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitHover;
+
+            if (Physics.Raycast(rayHover, out hitHover))
+            {
+                if (hitHover.transform.CompareTag("HostileNPC")) //TODO: add friendly NPCs here as well
+                {
+                    toolTipActive = true;
+                    hoverName = hitHover.transform.GetComponent<EnemyStats>().enemyName;
+                }
+                else
+                {
+                    toolTipActive = false;
+                }
+            }
+
+
             //else if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             //{
             //    IEnemy clickable = hit.transform.GetComponent<IEnemy>();
@@ -100,7 +129,6 @@ public class TargetingSystem : MonoBehaviour
             //        _previousClickable = clickable;
             //    }
             //}
-
         }
     }
 
