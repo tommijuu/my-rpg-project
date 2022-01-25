@@ -55,6 +55,7 @@ public class PlayerCombatController : MonoBehaviour
     public LayerMask raycastLayers;
     public bool inLineOfSight;
 
+
     private void Start()
     {
         targetingSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<TargetingSystem>();
