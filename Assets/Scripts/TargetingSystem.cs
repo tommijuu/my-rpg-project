@@ -42,16 +42,16 @@ public class TargetingSystem : MonoBehaviour
     {
         if (playerCombatController != null)
         {
+            ////Checking if mouse is over UI, used in the future for example to click spells (they can be used through keyboard bindings too of course)
+            //if (IsPointerOverUIObject())
+            //{
+            //    Debug.Log("Hovering UI");
+            //}
+
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            //Mouse hovering
 
-            //Checking if mouse is over UI, used in the future for example to click spells (they can be used through keyboard bindings too of course)
-            if (IsPointerOverUIObject())
-            {
-                Debug.Log("Hovering UI");
-            }
 
             //Targeting an NPC when clicked
             if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
@@ -81,7 +81,7 @@ public class TargetingSystem : MonoBehaviour
             }
 
             //Untarget using Escape
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) && playerCombatController.currentTarget)
             {
                 rightClickedOrAttacking = false;
 
@@ -132,13 +132,13 @@ public class TargetingSystem : MonoBehaviour
         }
     }
 
-    //Returns true if a UI element is hovered
-    private bool IsPointerOverUIObject()
-    {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-        return results.Count > 0;
-    }
+    ////Returns true if a UI element is hovered
+    //private bool IsPointerOverUIObject()
+    //{
+    //    PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+    //    eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+    //    List<RaycastResult> results = new List<RaycastResult>();
+    //    EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+    //    return results.Count > 0;
+    //}
 }
