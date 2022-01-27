@@ -24,7 +24,7 @@ public class CharacterSelection : MonoBehaviour
                 userStats = userWarrior.GetComponent<UserStats>();
                 AssignBaseStats(0);
                 classSelectionWindow = false;
-                Instantiate(userWarrior);
+                Instantiate(userWarrior, transform);
                 //targetingSystem.playerCombatController = userWarrior.GetComponent<PlayerCombatController>();
             }
             if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 100, 200, 40), "Mage"))
@@ -32,7 +32,7 @@ public class CharacterSelection : MonoBehaviour
                 userStats = userMage.GetComponent<UserStats>();
                 AssignBaseStats(1);
                 classSelectionWindow = false;
-                Instantiate(userMage);
+                Instantiate(userMage, transform);
                 //targetingSystem.playerCombatController = userMage.GetComponent<PlayerCombatController>();
             }
         }

@@ -7,7 +7,7 @@ public class ThirdPersonCameraController : MonoBehaviour
     //This script is for the camera to be MMO-like, like in World of Warcraft.
     //Holding right click is free look, so it rotates the camera around the player
     //Holding left click turns the player and the camera, so player's moving direction can be controlled with mouse
-    //Scroll implemented too
+    //Scroll zoom implemented too
 
     public Transform player, target; //Player transform is to rotate the player (left click) and target is a point inside the player where the camera focuses (both clicks)
 

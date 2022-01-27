@@ -36,7 +36,26 @@ public class PlayerMovementController : MonoBehaviour
         //Moving
         float xMovement = Input.GetAxis("Horizontal");
         float zMovement = Input.GetAxis("Vertical");
-        transform.Translate(xMovement * moveSpeed * Time.deltaTime, 0, zMovement * moveSpeed * Time.deltaTime);
+
+        //Player character was sliding because of terrain while using transform to move so I added additional checks that seem to fix the issue.
+        //Another workaround is to straight move through RigidBody but doing that would mean editing the camera system as it uses transform too.
+
+        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        {
+            transform.Translate(xMovement * moveSpeed * Time.deltaTime, 0, zMovement * moveSpeed * Time.deltaTime);
+        }
+        else if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
+        {
+            xMovement = 0;
+            zMovement = 0;
+        }
+
+        //The mentioned RigidBody movement script:
+
+        //Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+        //_rb.MovePosition(transform.position + movement * Time.deltaTime * moveSpeed);
+
 
         //Jumping math
         if (_rb.velocity.y < 0)
