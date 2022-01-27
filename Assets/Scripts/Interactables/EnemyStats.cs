@@ -8,20 +8,24 @@ public class EnemyStats : MonoBehaviour
 
     public string enemyName;
 
-    // Start is called before the first frame update
+    public bool isDead;
+
+    public float respawnTime = 5f;
+
+    public GameObject respawnPoint;
+
     void Start()
     {
 
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (curHp <= 0)
+        if (curHp <= 0 && !isDead)
         {
-            Debug.Log("Enemy destroyed!");
+            isDead = true;
             curHp = 0;
-            Destroy(gameObject);
+            StartCoroutine(Death());
             GameObject.FindGameObjectWithTag("GameController").GetComponent<CombatEvents>().audioSource.Play();
         }
     }
@@ -35,5 +39,12 @@ public class EnemyStats : MonoBehaviour
             Debug.Log("Enemy HP after receiving dmg: " + curHp);
 
         }
+    }
+
+    IEnumerator Death()
+    {
+        yield return new WaitForSeconds(respawnTime);
+        Debug.Log("Enemy destroyed!");
+        Destroy(gameObject);
     }
 }
