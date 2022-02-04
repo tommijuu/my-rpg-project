@@ -10,13 +10,17 @@ public class EnemyStats : MonoBehaviour
 
     public bool isDead;
 
-    public float respawnTime = 5f;
+    public float respawnTime;
 
     public GameObject respawnPoint;
 
+    public Respawn respawn;
+
     void Start()
     {
-
+        respawnTime = 5f;
+        respawnPoint = GameObject.Find("StartHumanRespawnPoint");
+        respawn = respawnPoint.GetComponent<Respawn>();
     }
 
     void Update()
@@ -25,8 +29,7 @@ public class EnemyStats : MonoBehaviour
         {
             isDead = true;
             curHp = 0;
-            StartCoroutine(Death());
-            GameObject.FindGameObjectWithTag("GameController").GetComponent<CombatEvents>().audioSource.Play();
+            Death();
         }
     }
 
@@ -37,14 +40,14 @@ public class EnemyStats : MonoBehaviour
             curHp -= dmg;
             Debug.Log("Enemy received " + dmg + " damage.");
             Debug.Log("Enemy HP after receiving dmg: " + curHp);
-
         }
     }
 
-    IEnumerator Death()
+    private void Death()
     {
-        yield return new WaitForSeconds(respawnTime);
-        Debug.Log("Enemy destroyed!");
-        Destroy(gameObject);
+        StartCoroutine(respawn.Spawn(respawnTime));
+        Destroy(this.gameObject);
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<CombatEvents>().audioSource.Play();
+        //respawn.Spawn();
     }
 }

@@ -9,23 +9,25 @@ public class Respawn : MonoBehaviour
 
     void Start()
     {
-        Spawn();
+        StartCoroutine(Spawn(0));
     }
 
-    void Spawn()
+    public IEnumerator Spawn(float spawnTime)
     {
+        yield return new WaitForSeconds(spawnTime);
+
         Vector3 randomSpawn = new Vector3(transform.position.x + Random.Range(-10, 10), transform.position.y, transform.position.z + Random.Range(-10, 10));
 
         GameObject clone;
         clone = Instantiate(prefab, randomSpawn, Quaternion.identity);
         target = clone;
-        target.transform.GetComponent<EnemyStats>().respawnPoint = gameObject;
+        target.transform.GetComponent<EnemyStats>().respawnPoint = this.gameObject;
 
         RaycastHit hit;
 
         if (Physics.Raycast(target.transform.position, -Vector3.up, out hit)) //raycast downwards
         {
-            target.transform.position = new Vector3(target.transform.position.x, hit.point.y + 5, target.transform.position.z); //y + 5 just to spawn on top of the terrain
+            target.transform.position = new Vector3(target.transform.position.x, hit.point.y + 5, target.transform.position.z); //y + 5 just to make sure spawn is on top of the terrain
         }
     }
 }
