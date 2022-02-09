@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,15 +9,24 @@ public class NPCHostileHuman : Interactable, IEnemy
     //Each hostile enemy types will have their unique stats, yet to be implemented
     //Currently the script just moves the "Human", actually a box, randomly in a set range
 
-    private NavMeshAgent _navMeshAgent;
+    //private NavMeshAgent _navMeshAgent;
 
-    private NavMeshPath _navPath;
+    //private NavMeshPath _navPath;
 
-    private Vector3 _movePoint;
+    //private Vector3 _movePoint;
 
-    private bool _inCoroutine;
+    //private bool _inCoroutine;
 
-    private bool _validPath;
+    //private bool _validPath;
+
+    public enum State
+    {
+        Roaming,
+        Chasing,
+        Attacking
+    }
+
+    public State state;
 
     public bool isGrounded, navMeshSet;
 
@@ -25,13 +35,26 @@ public class NPCHostileHuman : Interactable, IEnemy
     public int ID { get; set; }
 
     public float moveTimer = 4f;
+    public float movementSpeed;
 
-    public int minMoveRange = -2;
-    public int maxMoveRange = 2;
+    public GameObject target;
 
+    public bool inCombat;
+
+    public float aggroRange, attackingRange;
+
+    //public State currentState;
+
+    //public int minMoveRange = -2;
+    //public int maxMoveRange = 2;
+    void Awake()
+    {
+        state = State.Roaming;
+    }
     void Start()
     {
-        navMeshSet = false;
+        //navMeshSet = false;
+
         isGrounded = false;
         ID = 0; //Human type's id is 0
 
@@ -43,10 +66,124 @@ public class NPCHostileHuman : Interactable, IEnemy
         //    SetNavMeshStuff();
         //}
 
-        //if (!_inCoroutine && navMeshSet)
+        //if (!_inCoroutine/* && navMeshSet*/)
         //{
         //    StartCoroutine(Move());
         //}
+        //RunStateMachine();
+        switch (state)
+        {
+            case State.Roaming:
+                if (moveTimer > 0)
+                {
+                    transform.Translate(Vector3.forward * movementSpeed);
+                    moveTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    Wander();
+                }
+                SearchForTarget();
+                break;
+            case State.Chasing:
+                FollowTarget();
+                break;
+            case State.Attacking:
+                Attack();
+                break;
+        }
+
+        //if (target == null)
+        //{
+        //    SearchForTarget();
+        //}
+        //else
+        //{
+        //    if (Vector3.Distance(target.transform.position, transform.position) <= aggroRange)
+        //        state = State.Chasing;
+        //}
+    }
+
+
+    //private void RunStateMachine()
+    //{
+    //    State nextState = currentState?.RunCurrentState(); //? means that if the current state is not null run it, if it is, ignore it
+
+    //    if (nextState != null)
+    //    {
+    //        SwitchToNextState(nextState);
+    //    }
+    //}
+
+    //private void SwitchToNextState(State nextState)
+    //{
+    //    currentState = nextState;
+    //}
+
+    private void Wander()
+    {
+        moveTimer = 4f; //reset timer
+        transform.eulerAngles = new Vector3(0, UnityEngine.Random.Range(0, 360), 0);
+    }
+
+    private void SearchForTarget()
+    {
+        //Detecting player via sphere cast
+        Vector3 center = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        Collider[] hitColliders = Physics.OverlapSphere(center, aggroRange);
+        int i = 0;
+
+        while (i < hitColliders.Length)
+        {
+            if (hitColliders[i].transform.CompareTag("Player")) //player found within aggro range, change to chasing
+            {
+                target = hitColliders[i].transform.gameObject;
+                state = State.Chasing;
+            }
+            i++;
+        }
+    }
+
+    void OnDrawGizmos() //to show the aggro range of the enemy
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, aggroRange);
+    }
+
+    private void FollowTarget()
+    {
+        Vector3 targetPos = target.transform.position;
+        targetPos.y = transform.position.y;
+        transform.LookAt(targetPos);
+
+        float distance = Vector3.Distance(target.transform.position, transform.position);
+        if (distance > attackingRange) //player not yet within attacking range, so move
+        {
+            transform.Translate(Vector3.forward * movementSpeed);
+        }
+        else //if player is in attacking range, change state to attacking
+        {
+            state = State.Attacking;
+        }
+
+        if (Vector3.Distance(target.transform.position, transform.position) > aggroRange) //if player not in aggro range, change state to roaming
+        {
+            //TODO: Return to spawn point here first
+            state = State.Roaming;
+        }
+    }
+
+    private void Attack()
+    {
+        float distance = Vector3.Distance(target.transform.position, transform.position);
+        if (distance > attackingRange) //if player not in melee range, change state to chasing
+        {
+            state = State.Chasing;
+        }
+        else
+        {
+            Debug.Log("Enemy is within attack range and ATTACKING");
+        }
     }
 
     //public void SetNavMeshStuff()

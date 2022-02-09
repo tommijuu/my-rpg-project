@@ -14,6 +14,7 @@ public class Respawn : MonoBehaviour
 
     public IEnumerator Spawn(float spawnTime)
     {
+        Debug.Log(spawnTime);
         yield return new WaitForSeconds(spawnTime);
 
         Vector3 randomSpawn = new Vector3(transform.position.x + Random.Range(-10, 10), transform.position.y, transform.position.z + Random.Range(-10, 10));
