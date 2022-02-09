@@ -8,21 +8,28 @@ public class EnemyStats : MonoBehaviour
 
     public string enemyName;
 
-    // Start is called before the first frame update
+    public bool isDead;
+
+    public float respawnTime;
+
+    public GameObject respawnPoint;
+
+    public Respawn respawn;
+
     void Start()
     {
-
+        respawnTime = 5f;
+        respawnPoint = GameObject.Find("StartHumanRespawnPoint");
+        respawn = respawnPoint.GetComponent<Respawn>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (curHp <= 0)
+        if (curHp <= 0 && !isDead)
         {
-            Debug.Log("Enemy destroyed!");
+            isDead = true;
             curHp = 0;
-            Destroy(gameObject);
-            GameObject.FindGameObjectWithTag("GameController").GetComponent<CombatEvents>().audioSource.Play();
+            Death();
         }
     }
 
@@ -33,7 +40,14 @@ public class EnemyStats : MonoBehaviour
             curHp -= dmg;
             Debug.Log("Enemy received " + dmg + " damage.");
             Debug.Log("Enemy HP after receiving dmg: " + curHp);
-
         }
+    }
+
+    private void Death()
+    {
+        StartCoroutine(respawn.Spawn(respawnTime));
+        Destroy(this.gameObject);
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<CombatEvents>().audioSource.Play();
+        //respawn.Spawn();
     }
 }
