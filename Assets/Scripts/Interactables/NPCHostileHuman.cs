@@ -139,6 +139,7 @@ public class NPCHostileHuman : Interactable, IEnemy
             {
                 target = hitColliders[i].transform.gameObject;
                 state = State.Chasing;
+                break; //Player found, no need to search for more for now
             }
             i++;
         }
