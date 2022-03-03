@@ -45,7 +45,8 @@ public class EnemyStats : MonoBehaviour
 
     private void Death()
     {
-        StartCoroutine(respawn.Spawn(respawnTime));
+        //StartCoroutine(respawn.Spawn(respawnTime, gameObject));
+        respawn.StartCoroutine(respawn.Spawn(respawnTime));
         Destroy(this.gameObject);
         GameObject.FindGameObjectWithTag("GameController").GetComponent<CombatEvents>().audioSource.Play();
         //respawn.Spawn();

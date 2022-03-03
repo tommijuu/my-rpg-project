@@ -9,18 +9,19 @@ public class Respawn : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(Spawn(0));
+        StartCoroutine(Spawn(0f));
     }
 
     public IEnumerator Spawn(float spawnTime)
     {
-        Debug.Log(spawnTime);
+        Debug.Log(spawnTime, prefab);
         yield return new WaitForSeconds(spawnTime);
 
         Vector3 randomSpawn = new Vector3(transform.position.x + Random.Range(-10, 10), transform.position.y, transform.position.z + Random.Range(-10, 10));
 
         GameObject clone;
         clone = Instantiate(prefab, randomSpawn, Quaternion.identity);
+
         target = clone;
         target.transform.GetComponent<EnemyStats>().respawnPoint = this.gameObject;
 
