@@ -31,7 +31,7 @@ public class FireBall : MonoBehaviour
     {
         if ((_playerCombatController.currentTarget != null || _playerCombatController.lastTarget != null))
         {
-            if (!_targetingSystem.untargeted)
+            if (!_targetingSystem.untargeted) //if player hasn't untargeted the target
             {
                 if (_playerCombatController.currentTarget != null) //goes to current target's location
                 {
@@ -44,7 +44,7 @@ public class FireBall : MonoBehaviour
                     transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
                 }
             }
-            else
+            else //if player has untargeted, use lastTarget position isntead
             {
                 if (_playerCombatController.finishedCasting) //current target untargeted but cast finished so goes to last target
                 {

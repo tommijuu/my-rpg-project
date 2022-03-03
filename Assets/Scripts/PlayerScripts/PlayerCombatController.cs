@@ -177,14 +177,21 @@ public class PlayerCombatController : MonoBehaviour
         {
             //Showing the current cast time in seconds and milliseconds in relation to the required quest time
 
-            currentCastTime += Time.deltaTime;
-            int seconds = (int)(currentCastTime % 60);
-            int milliseconds = (int)(currentCastTime * 100f) % 100;
+            if ((currentTarget == null) && (lastTarget == null)) //if target has died mid spell cast, stop casting
+            {
+                StopAttack();
+            }
+            else //there is a target
+            {
+                currentCastTime += Time.deltaTime;
+                int seconds = (int)(currentCastTime % 60);
+                int milliseconds = (int)(currentCastTime * 100f) % 100;
 
-            if (seconds >= 10) //format to show two numbers for seconds
-                spellCastTimerText.text = seconds.ToString("D2") + "." + milliseconds.ToString("D2") + "/" + castTime.ToString();
-            else //don't show the 0 in front of the one number seconds
-                spellCastTimerText.text = seconds.ToString("D1") + "." + milliseconds.ToString("D2") + "/" + castTime.ToString();
+                if (seconds >= 10) //format to show two numbers for seconds
+                    spellCastTimerText.text = seconds.ToString("D2") + "." + milliseconds.ToString("D2") + "/" + castTime.ToString();
+                else //don't show the 0 in front of the one number seconds
+                    spellCastTimerText.text = seconds.ToString("D1") + "." + milliseconds.ToString("D2") + "/" + castTime.ToString();
+            }
         }
 
         if (spellReachedEnemy)
