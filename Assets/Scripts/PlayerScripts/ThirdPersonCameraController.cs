@@ -51,6 +51,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Confined; //keep cursor confined in the game window
         Vector3 angles = transform.eulerAngles;
         _xDeg = angles.x;
         _yDeg = angles.y;
