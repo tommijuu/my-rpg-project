@@ -50,6 +50,11 @@ public class PlayerMovementController : MonoBehaviour
             zMovement = 0;
         }
 
+        if (Input.GetMouseButton(0) && Input.GetMouseButton(1))
+        {
+            transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+        }
+
         //The mentioned RigidBody movement script:
 
         //Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
