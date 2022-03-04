@@ -9,7 +9,13 @@ public class Respawn : MonoBehaviour
 
     void Start()
     {
+        //int i = 10;
+        //while (i > 0)
+        //{
         StartCoroutine(Spawn(0f));
+        //    i--;
+        //}
+
     }
 
     public IEnumerator Spawn(float spawnTime)
