@@ -20,6 +20,8 @@ public class TargetingSystem : MonoBehaviour
     public bool toolTipActive;
     public string hoverName;
 
+    public Color originalColor;
+
     //void Start()
     //{
     //    playerCombatController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCombatController>();
@@ -51,8 +53,6 @@ public class TargetingSystem : MonoBehaviour
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-
-
             //Targeting an NPC when clicked
             if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
             {
@@ -60,6 +60,12 @@ public class TargetingSystem : MonoBehaviour
                 {
                     if (hit.transform.CompareTag("HostileNPC"))
                     {
+
+                        if (playerCombatController.currentTarget)
+                        {
+                            ClearTargetColor();
+                        }
+
                         if (Input.GetMouseButtonDown(1))
                         {
                             Debug.Log("Target right clicked");
@@ -70,6 +76,7 @@ public class TargetingSystem : MonoBehaviour
                         playerCombatController.currentTarget = hit.transform;
                         playerCombatController.enemyStats = playerCombatController.currentTarget.GetComponent<EnemyStats>(); //Search EnemyStats script for PlayerCombatController
                         playerCombatController.targetRenderer = playerCombatController.currentTarget.GetComponent<Renderer>();
+                        originalColor = playerCombatController.targetRenderer.material.color; //store the target's original color
                         untargeted = false;
                         playerCombatController.targetRenderer.material.color = Color.red;
                     }
@@ -92,9 +99,9 @@ public class TargetingSystem : MonoBehaviour
                 untargeted = true;
 
                 playerCombatController.currentTarget = null;
-                playerCombatController.targetRenderer.material.color = Color.yellow;
+                //playerCombatController.targetRenderer.material.color = Color.yellow;
+                ClearTargetColor();
             }
-
 
             //Tooltip logic
             Ray rayHover = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -130,6 +137,11 @@ public class TargetingSystem : MonoBehaviour
             //    }
             //}
         }
+    }
+
+    void ClearTargetColor()
+    {
+        playerCombatController.targetRenderer.material.color = originalColor; //just return the color to original
     }
 
     ////Returns true if a UI element is hovered
