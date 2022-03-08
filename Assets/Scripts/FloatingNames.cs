@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloatingNames : MonoBehaviour
+public class FloatingTexts : MonoBehaviour
 {
     private GameObject parentObject;
 
