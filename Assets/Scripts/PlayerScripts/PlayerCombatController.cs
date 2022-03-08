@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class PlayerCombatController : MonoBehaviour
 {
-    //private FireBall _fireBall;
-
     private Coroutine _attackRoutine;
 
     private RaycastHit _hit;
@@ -15,17 +13,17 @@ public class PlayerCombatController : MonoBehaviour
 
     public Transform lastTarget;
 
-    public GameObject[] spellPrefab;
+    public GameObject[] spellPrefab; //just fireball currently
 
-    public Transform castPoint;
+    public Transform castPoint; //where the spells are coming from
 
-    public Renderer targetRenderer;
+    public Renderer targetRenderer; //used to change enemy's color when targeting
 
-    public Text spellCastTimerText;
-    public Animator outOfRangeAnimator, noTargetAnimator;
-    public TargetingSystem targetingSystem;
+    public Text spellCastTimerText; //cast timer
+    public Animator outOfRangeAnimator, noTargetAnimator; //indicators when out of range or no target
+    public TargetingSystem targetingSystem; //where targeting happens
 
-    public EnemyStats enemyStats;
+    public EnemyStats enemyStats; //enemy hp etc. stats
 
     public bool isAttacking = false;
 
@@ -38,12 +36,13 @@ public class PlayerCombatController : MonoBehaviour
 
     public float fireBallDmg = 20f; //set to 20 just to test things out currently
 
-    public bool behindEnemy;
-    public bool canSpellAttack;
+    public bool behindEnemy; //for stronger attacks when behind in the future
+    public bool canSpellAttack; //to determine if player's angle/distance etc. in relation to the target are fine  
 
     public float spellCastDistance = 40f;
-    public float attackingAngle = 60f;
+    public float attackingAngle = 60f; //can't attack when not actually facing the enemy
 
+    //Auto-attacking:
     public bool canAutoAttack;
 
     public float autoAttackDistance = 5f;
@@ -52,9 +51,17 @@ public class PlayerCombatController : MonoBehaviour
 
     public float autoAttackDmg = 10f;
 
+    //Line of sight (LOS):
     public LayerMask raycastLayers;
-    public bool inLineOfSight;
+    //public bool inLineOfSight;
 
+    //HUD stuff:
+    public Texture hpBarTex;
+    public Texture manaBarTex;
+    public Texture barBackgroundTex;
+
+    public float hpBarLength, hpBatPercent;
+    public float manaBarLength, manaBarPercent;
 
     private void Start()
     {
@@ -70,68 +77,19 @@ public class PlayerCombatController : MonoBehaviour
         finishedCasting = false;
     }
 
+    private void OnGUI()
+    {
+
+    }
+
     void Update()
     {
         if (currentTarget != null)
         {
-            //Attacking angle and distance stuff
-            Vector3 toTarget = (currentTarget.transform.position - transform.position).normalized;
-            if (Vector3.Dot(toTarget, currentTarget.transform.forward) < 0)
-            {
-                behindEnemy = false;
-            }
-            else
-            {
-                behindEnemy = true;
-                //Some crit logic here if rogue for example
-            }
+            DistanceAndAngleChecks();
 
-            float distance = Vector3.Distance(this.transform.position, currentTarget.transform.position);
-            Vector3 targetDir = currentTarget.transform.position - transform.position;
-            Vector3 forward = transform.forward;
-            float angle = Vector3.Angle(targetDir, forward);
-
-            if (angle > attackingAngle)
-            {
-                canSpellAttack = false;
-            }
-            else
-            {
-
-                if (distance <= autoAttackDistance)
-                {
-                    canAutoAttack = true;
-                }
-                else
-                {
-                    canAutoAttack = false;
-                }
-
-                if (distance <= spellCastDistance)
-                {
-                    canSpellAttack = true;
-                }
-                else
-                {
-                    canSpellAttack = false;
-                }
-
-            }
-
-            //Line of sight
-            RaycastHit hit;
-            if (Physics.Linecast(currentTarget.transform.position, transform.position, out hit, raycastLayers))
-            {
-                Debug.Log("LOS");
-                inLineOfSight = false;
-            }
-            else
-            {
-                inLineOfSight = true;
-            }
-
-            //Auto attack
-            if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canAutoAttack && inLineOfSight)
+            //Auto-attack
+            if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canAutoAttack && InLineOfSight())
             {
                 if (autoAttackCurTime < autoAttackCooldown)
                 {
@@ -146,8 +104,6 @@ public class PlayerCombatController : MonoBehaviour
                     }
                 }
             }
-
-
         }
 
         //When button 1 pressed and able to attack, attack
@@ -156,7 +112,7 @@ public class PlayerCombatController : MonoBehaviour
             targetingSystem.rightClickedOrAttacking = true;
             if (currentTarget != null)
             {
-                if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canSpellAttack && inLineOfSight)
+                if (currentTarget.CompareTag("HostileNPC") && !isAttacking && canSpellAttack && InLineOfSight())
                 {
                     _attackRoutine = StartCoroutine(SpellAttack());
                 }
@@ -171,7 +127,6 @@ public class PlayerCombatController : MonoBehaviour
                 noTargetAnimator.SetTrigger("ShowErrorText");
             }
         }
-
 
         if (isAttacking)
         {
@@ -201,6 +156,68 @@ public class PlayerCombatController : MonoBehaviour
             {
                 enemyStats.ReceiveDamage(fireBallDmg);
             }
+        }
+    }
+
+    private void DistanceAndAngleChecks()
+    {
+        //Attacking angle and distance stuff
+        Vector3 toTarget = (currentTarget.transform.position - transform.position).normalized;
+        if (Vector3.Dot(toTarget, currentTarget.transform.forward) < 0)
+        {
+            behindEnemy = false;
+        }
+        else
+        {
+            behindEnemy = true;
+            //Some crit logic here if rogue for example
+        }
+
+        float distanceFromTarget = Vector3.Distance(this.transform.position, currentTarget.transform.position);
+        Vector3 targetDir = currentTarget.transform.position - transform.position;
+        Vector3 forward = transform.forward;
+        float angle = Vector3.Angle(targetDir, forward);
+
+        if (angle > attackingAngle) //if not facing target
+        {
+            canSpellAttack = false;
+        }
+        else //facing target
+        {
+
+            if (distanceFromTarget <= autoAttackDistance)
+            {
+                canAutoAttack = true;
+            }
+            else
+            {
+                canAutoAttack = false;
+            }
+
+            if (distanceFromTarget <= spellCastDistance)
+            {
+                canSpellAttack = true;
+            }
+            else
+            {
+                canSpellAttack = false;
+            }
+
+        }
+    }
+
+    private bool InLineOfSight()
+    {
+        //Line of sight
+        RaycastHit hit;
+        if (Physics.Linecast(currentTarget.transform.position, transform.position, out hit, raycastLayers))
+        {
+            Debug.Log("LOS");
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 
@@ -235,7 +252,7 @@ public class PlayerCombatController : MonoBehaviour
 
     public void CastSpell() //Instantiates a fireball prefab and FireBall.cs takes over, launching it towards the target
     {
-        if (isAttacking && inLineOfSight)
+        if (isAttacking && InLineOfSight())
         {
             Instantiate(spellPrefab[0], castPoint.transform.position, Quaternion.identity);
         }
@@ -245,10 +262,5 @@ public class PlayerCombatController : MonoBehaviour
         }
 
         finishedCasting = true;
-    }
-
-    private bool InLineOfSight() //not in action yet
-    {
-        return false;
     }
 }

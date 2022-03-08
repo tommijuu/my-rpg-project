@@ -23,7 +23,8 @@ public class NPCHostileHuman : Interactable, IEnemy
     {
         Roaming,
         Chasing,
-        Attacking
+        Attacking,
+        Returning
     }
 
     public State state;
@@ -36,12 +37,15 @@ public class NPCHostileHuman : Interactable, IEnemy
 
     public float moveTimer = 4f;
     public float movementSpeed;
+    public float runningMultiplier, fleeingMultiplier;
 
     public GameObject target;
 
     public bool inCombat;
 
     public float aggroRange, attackingRange;
+
+    public float followDistance = 40f;
 
     //public State currentState;
 
@@ -91,6 +95,9 @@ public class NPCHostileHuman : Interactable, IEnemy
             case State.Attacking:
                 Attack();
                 break;
+            case State.Returning:
+                Return();
+                break;
         }
 
         //if (target == null)
@@ -102,6 +109,20 @@ public class NPCHostileHuman : Interactable, IEnemy
         //    if (Vector3.Distance(target.transform.position, transform.position) <= aggroRange)
         //        state = State.Chasing;
         //}
+    }
+
+    private void Return()
+    {
+        //transform.LookAt(GetComponent<EnemyStats>().respawnPoint.transform.position);
+        Vector3 targetPos = GetComponent<EnemyStats>().respawnPoint.transform.position;
+        targetPos.y = transform.position.y;
+        transform.LookAt(targetPos);
+
+
+        if (transform.position.x - GetComponent<EnemyStats>().respawnPoint.transform.position.x <= 0f)
+            state = State.Roaming;
+        else
+            transform.Translate(Vector3.forward * movementSpeed * fleeingMultiplier);
     }
 
 
@@ -139,16 +160,12 @@ public class NPCHostileHuman : Interactable, IEnemy
             {
                 target = hitColliders[i].transform.gameObject;
                 state = State.Chasing;
+
+                GetComponent<AudioSource>().Play();
                 break; //Player found, no need to search for more for now
             }
             i++;
         }
-    }
-
-    void OnDrawGizmos() //to show the aggro range of the enemy
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, aggroRange);
     }
 
     private void FollowTarget()
@@ -160,18 +177,23 @@ public class NPCHostileHuman : Interactable, IEnemy
         float distance = Vector3.Distance(target.transform.position, transform.position);
         if (distance > attackingRange) //player not yet within attacking range, so move
         {
-            transform.Translate(Vector3.forward * movementSpeed);
+            transform.Translate(Vector3.forward * movementSpeed * runningMultiplier);
         }
         else //if player is in attacking range, change state to attacking
         {
             state = State.Attacking;
         }
 
-        if (Vector3.Distance(target.transform.position, transform.position) > aggroRange) //if player not in aggro range, change state to roaming
+        if (Vector3.Distance(GetComponent<EnemyStats>().respawnPoint.transform.position, transform.position) > followDistance) //if player not in aggro range, change state to roaming
         {
-            //TODO: Return to spawn point here first
-            state = State.Roaming;
+            //TODO: Replace aggrorange by a set distance between the respawn point and the NPC
+            state = State.Returning;
         }
+        //if (Vector3.Distance(target.transform.position, transform.position) > aggroRange) //if player not in aggro range, change state to roaming
+        //{
+        //    //TODO: Replace aggrorange by a set distance between the respawn point and the NPC
+        //    state = State.Returning;
+        //}
     }
 
     private void Attack()
@@ -183,8 +205,16 @@ public class NPCHostileHuman : Interactable, IEnemy
         }
         else
         {
-            Debug.Log("Enemy is within attack range and ATTACKING");
+            //Debug.Log("Enemy is within attack range and ATTACKING");
+
+            //attacking here
         }
+    }
+
+    void OnDrawGizmos() //to show the aggro range of the enemy
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, aggroRange);
     }
 
     //public void SetNavMeshStuff()

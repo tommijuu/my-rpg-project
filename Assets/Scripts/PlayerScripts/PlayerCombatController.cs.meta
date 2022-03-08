@@ -3,7 +3,19 @@ guid: 4eedf541f339374428008da0b49d543b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - currentTarget: {instanceID: 0}
+  - lastTarget: {instanceID: 0}
+  - castPoint: {instanceID: 0}
+  - targetRenderer: {instanceID: 0}
+  - spellCastTimerText: {instanceID: 0}
+  - outOfRangeAnimator: {instanceID: 0}
+  - noTargetAnimator: {instanceID: 0}
+  - targetingSystem: {instanceID: 0}
+  - enemyStats: {instanceID: 0}
+  - hpBarTex: {fileID: 2800000, guid: 3f0defd9ddd8fea4f8512cf591ff2bd8, type: 3}
+  - manaBarTex: {fileID: 2800000, guid: 255c050ccda8e5c44b600331e374e2b4, type: 3}
+  - barBackgroundTex: {fileID: 2800000, guid: c181dc8dffc578949a4c37408c51489e, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
