@@ -30,7 +30,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.297, z: 0.59}
   m_LocalScale: {x: 0.5, y: 0.19999999, z: 0.19999999}
   m_Children: []
-  m_Father: {fileID: 6738491204818685369}
+  m_Father: {fileID: 9004085953443928373}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6738491204411009700
@@ -126,7 +126,7 @@ Transform:
   m_LocalPosition: {x: -0.18, y: 1.1305882, z: 0.010000229}
   m_LocalScale: {x: 0.29477692, y: 0.17339818, z: 0.29477692}
   m_Children: []
-  m_Father: {fileID: 6738491204818685369}
+  m_Father: {fileID: 9004085953443928373}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!23 &6738491204573635051
@@ -213,7 +213,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6738491204818685369}
+  - component: {fileID: 9004085953443928373}
   - component: {fileID: 6738491204818685368}
   - component: {fileID: 6738491204818685319}
   - component: {fileID: 6738491204818685318}
@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 6738491204818685373}
   - component: {fileID: 6738491204818685374}
   - component: {fileID: -6397701605092694266}
+  - component: {fileID: 6443629734454965906}
   m_Layer: 8
   m_Name: NPCHostileHuman
   m_TagString: HostileNPC
@@ -230,15 +231,15 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6738491204818685369
-Transform:
+--- !u!224 &9004085953443928373
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6738491204818685317}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 145, y: 480.78436, z: -814.9}
+  m_LocalPosition: {x: 0, y: 0, z: -814.9}
   m_LocalScale: {x: 1, y: 1.7, z: 1}
   m_Children:
   - {fileID: 6738491204411009697}
@@ -246,6 +247,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 145, y: 480.78436}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!33 &6738491204818685368
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -399,9 +405,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c589711e6648874ba736d5aa1b2ad6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyName: Hilbert the Wanderer
+  icon: {fileID: 21300000, guid: 298fac36e58c35c4696dffe2549e6173, type: 3}
   curHp: 100
   maxHp: 100
-  enemyName: Hilbert the Wanderer
   isDead: 0
   respawnTime: 0
   respawnPoint: {fileID: 0}
@@ -502,3 +509,11 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!222 &6443629734454965906
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6738491204818685317}
+  m_CullTransparentMesh: 1

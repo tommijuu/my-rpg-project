@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class EnemyStats : MonoBehaviour
 {
-    public float curHp, maxHp;
-
     public string enemyName;
+
+    public Sprite icon;
+
+    public float curHp, maxHp;
 
     public bool isDead;
 

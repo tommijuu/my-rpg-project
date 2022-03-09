@@ -7,6 +7,7 @@ public class UserStats : MonoBehaviour
     //Base class for player's stats
 
     public string userName;
+    public Sprite icon;
     public int level;
     public string userClass;
 

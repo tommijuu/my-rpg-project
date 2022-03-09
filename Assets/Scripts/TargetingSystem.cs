@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class TargetingSystem : MonoBehaviour
 {
     public PlayerCombatController playerCombatController;
-
+    public GameObject targetUnitFrame;
     //private RaycastHit _hit;
 
     //private IEnemy _previousClickable;
@@ -61,7 +61,7 @@ public class TargetingSystem : MonoBehaviour
                     if (hit.transform.CompareTag("HostileNPC"))
                     {
 
-                        if (playerCombatController.currentTarget)
+                        if (playerCombatController.currentTarget)//if there is already a target, clear the indicator before targeting
                         {
                             ClearTargetColor();
                         }
@@ -72,15 +72,21 @@ public class TargetingSystem : MonoBehaviour
                             rightClickedOrAttacking = true;
                         }
 
-                        Debug.Log(hit.transform);
+                        //Targeting
                         playerCombatController.currentTarget = hit.transform;
                         playerCombatController.enemyStats = playerCombatController.currentTarget.GetComponent<EnemyStats>(); //Search EnemyStats script for PlayerCombatController
+
+                        //Target indicator stuff
                         playerCombatController.targetRenderer = playerCombatController.currentTarget.GetComponent<Renderer>();
                         originalColor = playerCombatController.targetRenderer.material.color; //store the target's original color
                         untargeted = false;
-                        playerCombatController.targetRenderer.material.color = Color.red;
+                        playerCombatController.targetRenderer.material.color = Color.red; //targeting indicator
+
+                        //Unit frame stuff
+                        targetUnitFrame.SetActive(true);
+                        targetUnitFrame.GetComponent<UnitFrame>().SetIcon(playerCombatController.enemyStats.icon);
                     }
-                    if (hit.transform.CompareTag("Interactable")) //Interactable is a base class for NPCs and items
+                    if (hit.transform.CompareTag("Interactable")) //Interactable is a base class for NPCs and items, yet to be put in use
                     {
                         hit.transform.GetComponent<Interactable>().CheckDistance(playerCombatController.transform);
                     }
@@ -91,6 +97,7 @@ public class TargetingSystem : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape) && playerCombatController.currentTarget)
             {
                 rightClickedOrAttacking = false;
+                targetUnitFrame.SetActive(false);
 
                 if (playerCombatController.isAttacking)
                     playerCombatController.StopAttack();

@@ -9,11 +9,18 @@ public class CharacterSelection : MonoBehaviour
     public UserStats userStats;
     public bool classSelectionWindow;
     public GameObject userWarrior, userMage;
+    public int chosenClass;
+
+    public GameObject playerUnitFrame;
 
     //private void Start()
     //{
     //    targetingSystem = GameObject.FindGameObjectWithTag("GameController").GetComponent<TargetingSystem>();
     //}
+    private void Start()
+    {
+        playerUnitFrame.SetActive(false);
+    }
 
     private void OnGUI()
     {
@@ -22,17 +29,27 @@ public class CharacterSelection : MonoBehaviour
             if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 150, 200, 40), "Warrior"))
             {
                 userStats = userWarrior.GetComponent<UserStats>();
-                AssignBaseStats(0);
+                chosenClass = 0;
+                AssignBaseStats(chosenClass);
                 classSelectionWindow = false;
                 Instantiate(userWarrior, transform);
+
+                playerUnitFrame.SetActive(true);
+
+                playerUnitFrame.GetComponent<UnitFrame>().SetIcon(userStats.icon);
                 //targetingSystem.playerCombatController = userWarrior.GetComponent<PlayerCombatController>();
             }
             if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 100, 200, 40), "Mage"))
             {
                 userStats = userMage.GetComponent<UserStats>();
-                AssignBaseStats(1);
+                chosenClass = 1;
+                AssignBaseStats(chosenClass);
                 classSelectionWindow = false;
                 Instantiate(userMage, transform);
+
+                playerUnitFrame.SetActive(true);
+
+                playerUnitFrame.GetComponent<UnitFrame>().SetIcon(userStats.icon);
                 //targetingSystem.playerCombatController = userMage.GetComponent<PlayerCombatController>();
             }
         }

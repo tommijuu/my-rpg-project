@@ -178,7 +178,13 @@ MonoBehaviour:
   raycastLayers:
     serializedVersion: 2
     m_Bits: 512
-  inLineOfSight: 0
+  hpBarTex: {fileID: 0}
+  manaBarTex: {fileID: 0}
+  barBackgroundTex: {fileID: 0}
+  hpBarLength: 0
+  hpBatPercent: 0
+  manaBarLength: 0
+  manaBarPercent: 0
 --- !u!114 &6620989081731426979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,6 +198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   userName: 
+  icon: {fileID: 21300000, guid: 0c23c226447cfec4a9bdf45245c4f952, type: 3}
   level: 0
   userClass: Warrior
   currentHp: 100
