@@ -30,7 +30,7 @@ public class Respawn : MonoBehaviour
         clone = Instantiate(prefab, randomSpawn, Quaternion.identity);
 
         target = clone;
-        target.transform.GetComponent<EnemyStats>().respawnPoint = this.gameObject;
+        target.transform.GetComponent<EnemyStats>().respawnPoint = randomSpawn;
 
         RaycastHit hit;
 

@@ -114,12 +114,12 @@ public class NPCHostileHuman : Interactable, IEnemy
     private void Return()
     {
         //transform.LookAt(GetComponent<EnemyStats>().respawnPoint.transform.position);
-        Vector3 targetPos = GetComponent<EnemyStats>().respawnPoint.transform.position;
+        Vector3 targetPos = GetComponent<EnemyStats>().respawnPoint;
         targetPos.y = transform.position.y;
         transform.LookAt(targetPos);
 
 
-        if (transform.position.x - GetComponent<EnemyStats>().respawnPoint.transform.position.x <= 0f)
+        if (transform.position.x - GetComponent<EnemyStats>().respawnPoint.x <= 0f)
             state = State.Roaming;
         else
             transform.Translate(Vector3.forward * movementSpeed * fleeingMultiplier);
@@ -184,7 +184,7 @@ public class NPCHostileHuman : Interactable, IEnemy
             state = State.Attacking;
         }
 
-        if (Vector3.Distance(GetComponent<EnemyStats>().respawnPoint.transform.position, transform.position) > followDistance) //if player not in aggro range, change state to roaming
+        if (Vector3.Distance(GetComponent<EnemyStats>().respawnPoint, transform.position) > followDistance) //if player not in aggro range, change state to roaming
         {
             //TODO: Replace aggrorange by a set distance between the respawn point and the NPC
             state = State.Returning;

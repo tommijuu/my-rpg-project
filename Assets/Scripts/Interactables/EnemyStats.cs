@@ -14,15 +14,14 @@ public class EnemyStats : MonoBehaviour
 
     public float respawnTime;
 
-    public GameObject respawnPoint;
+    public Vector3 respawnPoint;
 
     public Respawn respawn;
 
     void Start()
     {
         respawnTime = 5f;
-        respawnPoint = GameObject.Find("StartHumanRespawnPoint");
-        respawn = respawnPoint.GetComponent<Respawn>();
+        respawn = GameObject.Find("StartHumanRespawnPoint").GetComponent<Respawn>();
     }
 
     void Update()
